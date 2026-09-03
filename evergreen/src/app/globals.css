@@ -1,0 +1,188 @@
+@import "tailwindcss";
+
+/* Drive dark: from a .dark class on <html> (set by next-themes) instead of
+   the OS media query, so the in-app toggle has the final say. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------------- */
+/* Static palette — identical in light and dark mode.                     */
+/* ---------------------------------------------------------------------- */
+@theme {
+  --color-ivory-50: #fbf9f3;
+  --color-ivory-100: #f4efe3;
+  --color-ivory-200: #ece3d0;
+
+  --color-sage-50: #f1f3e8;
+  --color-sage-100: #e3e8d3;
+  --color-sage-200: #cfd8b6;
+  --color-sage-300: #b3c193;
+  --color-sage-400: #93a571;
+  --color-sage-500: #778f58;
+  --color-sage-600: #5e7444;
+  --color-sage-700: #4a5b37;
+  --color-sage-800: #37452a;
+  --color-sage-900: #26301d;
+
+  --color-clay-600: #a6503f;
+  --color-clay-700: #8a4133;
+
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+
+  --shadow-paper: 0 1px 2px rgb(51 41 22 / 0.06), 0 6px 16px -4px rgb(51 41 22 / 0.10);
+  --shadow-paper-lg: 0 2px 4px rgb(51 41 22 / 0.07), 0 16px 32px -8px rgb(51 41 22 / 0.14);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Semantic tokens — the values these point to flip between modes below.  */
+/* ---------------------------------------------------------------------- */
+:root {
+  --background: var(--color-ivory-50);
+  --foreground: var(--color-sage-900);
+
+  --surface: var(--color-sage-50);
+  --surface-foreground: var(--color-sage-900);
+
+  --border: var(--color-sage-200);
+
+  --primary: var(--color-sage-600);
+  --primary-foreground: var(--color-ivory-50);
+
+  --secondary: var(--color-ivory-100);
+  --secondary-foreground: var(--color-sage-800);
+
+  --muted: var(--color-sage-100);
+  --muted-foreground: var(--color-sage-700);
+
+  --accent: var(--color-sage-200);
+  --accent-foreground: var(--color-sage-900);
+
+  --danger: var(--color-clay-600);
+  --danger-foreground: var(--color-ivory-50);
+
+  --ring: var(--color-sage-500);
+}
+
+.dark {
+  --background: #14170f;
+  --foreground: var(--color-ivory-100);
+
+  --surface: #1d2317;
+  --surface-foreground: var(--color-ivory-100);
+
+  --border: #333f27;
+
+  --primary: var(--color-sage-400);
+  --primary-foreground: #14170f;
+
+  --secondary: #242b1c;
+  --secondary-foreground: var(--color-ivory-100);
+
+  --muted: #242b1c;
+  --muted-foreground: var(--color-sage-300);
+
+  --accent: #2b331f;
+  --accent-foreground: var(--color-ivory-100);
+
+  --danger: #c96955;
+  --danger-foreground: #14170f;
+
+  --ring: var(--color-sage-400);
+}
+
+/* Re-expose the semantic tokens under Tailwind's --color-* namespace so
+   utilities like bg-background, text-foreground, border-border exist and
+   stay reactive to the .dark class (the "inline" keeps these as live
+   var() references instead of values baked in at build time). */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-foreground: var(--surface-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-ring: var(--ring);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-sage-200);
+    color: var(--color-sage-900);
+  }
+
+  .dark ::selection {
+    background-color: var(--color-sage-700);
+    color: var(--color-ivory-100);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+/* A very faint paper grain for large, quiet surfaces (used sparingly). */
+.paper-grain {
+  position: relative;
+  isolation: isolate;
+}
+.paper-grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.dark .paper-grain::before {
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
