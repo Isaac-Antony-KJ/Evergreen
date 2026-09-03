@@ -36,7 +36,6 @@ export default async function SharePage({
             id="subscription-url"
             readOnly
             value={subscriptionUrl}
-            onFocus={(e) => e.currentTarget.select()}
             className="font-mono text-xs sm:text-sm"
           />
           <CopyButton value={subscriptionUrl} />
